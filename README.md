@@ -35,9 +35,3 @@ Compile usando `gcc`:
 gcc main.c -o alunos
 ./alunos
 ```
-
-## 💡 Melhorias futuras
-
-- Salvar os dados em arquivo `.txt`
-- Ordenar por nota ou nome
-- Suporte a mais alunos com alocação dinâmica
