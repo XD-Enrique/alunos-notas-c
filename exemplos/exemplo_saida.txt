@@ -1,0 +1,10 @@
+--- MENU ---
+1. Mostrar todos os alunos
+2. Mostrar apenas aprovados (nota >= 6.0)
+3. Mostrar apenas reprovados (nota < 6.0)
+4. Sair
+Escolha uma opção: 1
+
+TODOS OS ALUNOS:
+João - Idade: 17 - Nota: 7.50 - APROVADO
+Maria - Idade: 18 - Nota: 5.00 - REPROVADO
