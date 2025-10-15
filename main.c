@@ -1,116 +1,141 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-float calcularMedia(float notas[], int qtd);
+#define MAX_ALUNOS 50
 
-int main()
-{
-    char nomes[50][100];   
-    int qtd_alunos, i;
-    int idades[50];
-    float notas[50];
+typedef struct {
+    char nome[100];
+    int idade;
+    float nota;
+} Aluno;
 
-    do {
-        printf("\nInsira a quantidade de alunos (max 50): \n");
-        scanf ("%i", &qtd_alunos);
-        if (qtd_alunos > 50 || qtd_alunos <= 0) {
-            system("clear");
-            printf("\nQuantidade inválida! Por favor, digite um número entre 1 e 50.\n");
-        }
+void limparTela();
+void cadastrarAlunos(Aluno alunos[], int *qtd);
+void mostrarAlunos(Aluno alunos[], int qtd);
+void mostrarAprovados(Aluno alunos[], int qtd);
+void mostrarReprovados(Aluno alunos[], int qtd);
+float calcularMedia(Aluno alunos[], int qtd);
+int indiceMaiorNota(Aluno alunos[], int qtd);
 
-    } while (qtd_alunos > 50 || qtd_alunos <= 0);
-
-    for (i=0; i<qtd_alunos; i++) {
-        getchar();
-
-        printf("\nInsira o nome do(a) aluno(a) %d: \n", i+1);
-        fgets(nomes[i], sizeof(nomes[i]), stdin);
-        nomes[i][strcspn(nomes[i], "\n")] = '\0';
-
-        printf("\nInsira a idade do(a) aluno(a) %d: \n", i+1);
-        scanf("%i", &idades[i]);
-
-        printf("\nInsira a nota do(a) aluno(a) %d: \n", i+1);
-        scanf("%f", &notas[i]);
-
-    }
-    system("clear");
-
-    float media=calcularMedia(notas, qtd_alunos);
-
-    int aprovados=0;
-    int indiceMaiorNota=0;
-
-    for (int i=0; i<qtd_alunos; i++) {
-        if (notas[i]>=6.0)
-            aprovados++;
-
-        if (notas[i]>notas[indiceMaiorNota])
-            indiceMaiorNota=i;
-    }
-
+int main() {
+    Aluno alunos[MAX_ALUNOS];
+    int qtd_alunos;
     int opcao;
 
     do {
-        printf("\n--- MENU ---\n");
+        printf("\nInsira a quantidade de alunos (1 a %d): ", MAX_ALUNOS);
+        scanf("%d", &qtd_alunos);
+        if (qtd_alunos <= 0 || qtd_alunos > MAX_ALUNOS) {
+            limparTela();
+            printf("⚠️  Quantidade inválida! Tente novamente.\n");
+        }
+    } while (qtd_alunos <= 0 || qtd_alunos > MAX_ALUNOS);
+
+    cadastrarAlunos(alunos, &qtd_alunos);
+    limparTela();
+
+    float media = calcularMedia(alunos, qtd_alunos);
+    int maior = indiceMaiorNota(alunos, qtd_alunos);
+
+    do {
+        printf("\n===== MENU =====\n");
         printf("1. Mostrar todos os alunos\n");
-        printf("2. Mostrar apenas aprovados (nota >= 6.0)\n");
-        printf("3. Mostrar apenas reprovados (nota < 6.0)\n");
-        printf("4. Sair\n");
+        printf("2. Mostrar apenas aprovados\n");
+        printf("3. Mostrar apenas reprovados\n");
+        printf("4. Mostrar resumo geral\n");
+        printf("5. Sair\n");
+        printf("================\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
-        system("clear");
+        limparTela();
 
-        switch (opcao){
+        switch (opcao) {
             case 1:
-            printf("\nTODOS OS ALUNOS:\n");
-            for (int i=0; i<qtd_alunos; i++) {
-                printf("%s - Idade: %d - Nota: %.2f -", nomes[i], idades[i], notas[i]);
-                if (notas[i]>=6.0)
-                    printf("APROVADO\n");
-                else
-                    printf("REPROVADO\n");
-            }
-            break;
-
+                mostrarAlunos(alunos, qtd_alunos);
+                break;
             case 2:
-                printf("\nALUNOS APROVADOS:\n");
-                    for (int i = 0; i < qtd_alunos; i++) {
-                        if (notas[i] >= 6.0)
-                            printf("%s - Idade: %d - Nota: %.2f -\n", nomes[i], idades[i], notas[i]);
-            }
-            break;
-
+                mostrarAprovados(alunos, qtd_alunos);
+                break;
             case 3:
-                printf("\nALUNOS REPROVADOS:\n");
-                    for (int i = 0; i < qtd_alunos; i++) {
-                        if (notas[i] < 6.0)
-                        printf("%s - Idade: %d - Nota: %.2f -\n", nomes[i], idades[i], notas[i]);
-                    }
-            break;
-
+                mostrarReprovados(alunos, qtd_alunos);
+                break;
             case 4:
-            printf("Encerrando programa...\n");
-            break;
-
+                printf("\n--- RESUMO GERAL ---\n");
+                printf("Média da turma: %.2f\n", media);
+                printf("Maior nota: %.2f - Aluno: %s\n",
+                       alunos[maior].nota, alunos[maior].nome);
+                break;
+            case 5:
+                printf("Encerrando programa...\n");
+                break;
             default:
-                printf("Opção inválida. Tente novamente.\n");
+                printf("Opção inválida!\n");
         }
-
-    } while (opcao != 4);
-
-    printf("\n--- RESUMO GERAL ---\n");
-    printf("Média da turma: %.2f\n", media);
-    printf("Maior nota: %.2f - Aluno: %s\n", notas[indiceMaiorNota], nomes[indiceMaiorNota]);
+    } while (opcao != 5);
 
     return 0;
 }
 
-float calcularMedia(float notas[], int qtd){
-    float soma = 0;
-    for (int i=0; i<qtd; i++) {
-        soma+=notas[i];
+void limparTela() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
+void cadastrarAlunos(Aluno alunos[], int *qtd) {
+    for (int i = 0; i < *qtd; i++) {
+        getchar(); // limpa buffer
+        printf("\nNome do aluno %d: ", i + 1);
+        fgets(alunos[i].nome, sizeof(alunos[i].nome), stdin);
+        alunos[i].nome[strcspn(alunos[i].nome, "\n")] = '\0';
+
+        printf("Idade: ");
+        scanf("%d", &alunos[i].idade);
+
+        printf("Nota: ");
+        scanf("%f", &alunos[i].nota);
     }
-    return soma/qtd;
+}
+
+void mostrarAlunos(Aluno alunos[], int qtd) {
+    printf("\n--- TODOS OS ALUNOS ---\n");
+    for (int i = 0; i < qtd; i++) {
+        printf("%s | Idade: %d | Nota: %.2f | %s\n",
+               alunos[i].nome, alunos[i].idade, alunos[i].nota,
+               alunos[i].nota >= 6.0 ? "APROVADO" : "REPROVADO");
+    }
+}
+
+void mostrarAprovados(Aluno alunos[], int qtd) {
+    printf("\n--- APROVADOS ---\n");
+    for (int i = 0; i < qtd; i++)
+        if (alunos[i].nota >= 6.0)
+            printf("%s | Idade: %d | Nota: %.2f\n",
+                   alunos[i].nome, alunos[i].idade, alunos[i].nota);
+}
+
+void mostrarReprovados(Aluno alunos[], int qtd) {
+    printf("\n--- REPROVADOS ---\n");
+    for (int i = 0; i < qtd; i++)
+        if (alunos[i].nota < 6.0)
+            printf("%s | Idade: %d | Nota: %.2f\n",
+                   alunos[i].nome, alunos[i].idade, alunos[i].nota);
+}
+
+float calcularMedia(Aluno alunos[], int qtd) {
+    float soma = 0;
+    for (int i = 0; i < qtd; i++)
+        soma += alunos[i].nota;
+    return soma / qtd;
+}
+
+int indiceMaiorNota(Aluno alunos[], int qtd) {
+    int indice = 0;
+    for (int i = 1; i < qtd; i++)
+        if (alunos[i].nota > alunos[indice].nota)
+            indice = i;
+    return indice;
 }
