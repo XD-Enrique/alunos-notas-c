@@ -1,37 +1,35 @@
-# 🎓 Sistema de Gerenciamento de Alunos em C
+# 🧑‍🏫 Sistema de Gerenciamento de Alunos em C
 
-Este é um programa simples feito em linguagem C que permite cadastrar até 50 alunos, registrando **nome**, **idade** e **nota**. Com esses dados, o sistema calcula a média da turma, identifica o aluno com a maior nota e oferece um menu para visualizar:
+Este programa em C permite **cadastrar, listar e analisar o desempenho de alunos** com base em suas notas.  
+Ele é um exemplo prático de manipulação de **estruturas, vetores, funções e menus interativos**.
 
-- ✅ Todos os alunos
-- 🟢 Apenas os aprovados (nota ≥ 6.0)
-- 🔴 Apenas os reprovados (nota < 6.0)
+---
 
-## 🚀 Funcionalidades
+## ⚙️ Funcionalidades
 
-- Cadastro de alunos (nome, idade, nota)
-- Cálculo da média da turma
-- Detecção da maior nota
-- Menu interativo para visualização
-- Validação da quantidade de alunos
-- Interface limpa com `system("clear")`
+- Cadastro de até **50 alunos**, com:
+  - Nome  
+  - Idade  
+  - Nota  
+- Cálculo automático da **média da turma**  
+- Identificação do **aluno com a maior nota**  
+- Exibição filtrada:
+  - Todos os alunos  
+  - Apenas aprovados (nota ≥ 6.0)  
+  - Apenas reprovados (nota < 6.0)  
+- Menu interativo e interface limpa (compatível com Windows e Linux)
 
-## 🧪 Exemplo de saída
+---
 
-Veja o conteúdo da pasta `/exemplos/exemplo_saida.txt`
+## 🧩 Estrutura do Código
 
-## 🧠 Lógica usada
+O programa foi dividido em funções para melhor organização:
 
-- Vetores para armazenar os dados dos alunos
-- `fgets()` + `strcspn()` para capturar o nome corretamente
-- Laços `for` para percorrer e processar os dados
-- Função separada para cálculo da média
-- Estrutura `switch` para menu interativo
+- `cadastrarAlunos()` → Lê e armazena os dados dos alunos  
+- `mostrarAlunos()` → Exibe todos os alunos e seus status  
+- `mostrarAprovados()` / `mostrarReprovados()` → Filtram os resultados  
+- `calcularMedia()` → Calcula a média geral da turma  
+- `indiceMaiorNota()` → Identifica o aluno com maior nota  
+- `limparTela()` → Limpa o terminal de forma multiplataforma  
 
-## 📦 Compilação e execução
-
-Compile usando `gcc`:
-
-```bash
-gcc main.c -o alunos
-./alunos
-```
+---
